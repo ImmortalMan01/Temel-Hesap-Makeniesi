@@ -128,13 +128,6 @@ class CalculatorGUI:
                 fg_color = 'white'
                 font_style = button_bold_font
 
-
-            # Override styles if provided in btn_info (optional feature, not used in current buttons list)
-            if len(btn_info) > 4 and btn_info[4]:
-                bg_color = btn_info[4]
-            if len(btn_info) > 5 and btn_info[5]:
-                font_style = btn_info[5]
-
             # Consistent padding and make buttons expand
             # relief=tk.RAISED for a bit of 3D effect on buttons
             current_colspan = 1
