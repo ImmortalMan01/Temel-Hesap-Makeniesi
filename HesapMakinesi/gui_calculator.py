@@ -13,11 +13,6 @@ class CalculatorGUI:
         # Configure root window's background color (optional)
         # master.configure(bg="#f0f0f0") # Light gray background
 
-# Define physical constants at the class or module level for clarity
-SPEED_OF_LIGHT = 299792458  # m/s
-PLANCK_CONSTANT = 6.62607015e-34  # J*s
-GRAVITATIONAL_CONSTANT = 6.67430e-11  # N*m^2/kg^2
-
         # Expression string
         self.expression = ""
         self.memory = 0.0
@@ -35,12 +30,11 @@ GRAVITATIONAL_CONSTANT = 6.67430e-11  # N*m^2/kg^2
             # Standard math constants/functions
             'pi': math.pi,
             'e': math.e,
-            'c_light': SPEED_OF_LIGHT,
-            'h_planck': PLANCK_CONSTANT,
-            'G_grav': GRAVITATIONAL_CONSTANT,
+            'c_light': SPEED_OF_LIGHT, # Defined at module level
+            'h_planck': PLANCK_CONSTANT, # Defined at module level
+            'G_grav': GRAVITATIONAL_CONSTANT, # Defined at module level
             # Note: 'pow' is handled by replacing "pow" with "**" in the expression string
         }
-
 
         # Display Entry widget (Increased font size, padding, and defined background)
         self.display_var = tk.StringVar()
@@ -49,12 +43,12 @@ GRAVITATIONAL_CONSTANT = 6.67430e-11  # N*m^2/kg^2
                                  bd=10, relief=tk.SUNKEN, width=14, # Using relief for a bit of depth
                                  state='readonly', justify='right', bg="#ffffff", fg="#000000") # White bg, black text
         # columnspan adjusted to 5 as we will have 5 columns for memory buttons
-        display_entry.grid(row=0, column=0, columnspan=5, pady=20, padx=10, sticky="nsew")
+        display_entry.grid(row=0, column=0, columnspan=5, pady=15, padx=10, sticky="nsew") # Reduced pady for display slightly
 
 
         # --- Button Frame and Definitions ---
         button_frame = tk.Frame(master) 
-        button_frame.grid(row=1, column=0, columnspan=5, padx=10, pady=5, sticky="nsew")
+        button_frame.grid(row=1, column=0, columnspan=5, padx=5, pady=5, sticky="nsew") # Reduced padx for button_frame
 
         # Define button texts, their grid positions (row, col), type, and any specific styling
         # (text, row, col, type, [optional: colspan])
@@ -145,7 +139,7 @@ GRAVITATIONAL_CONSTANT = 6.67430e-11  # N*m^2/kg^2
             button = tk.Button(button_frame, text=text_on_btn, font=font_style, fg=fg_color, bg=bg_color,
                                relief=tk.RAISED, bd=2,
                                command=lambda v=value_for_command, bt=btn_type: self.on_button_click(v, bt))
-            button.grid(row=r, column=c, columnspan=current_colspan, sticky="nsew", padx=3, pady=3) 
+            button.grid(row=r, column=c, columnspan=current_colspan, sticky="nsew", padx=2, pady=2) # Reduced padx/pady for buttons
 
 
         # Configure column and row weights for button_frame for uniform button sizing
