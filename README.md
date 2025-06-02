@@ -1,86 +1,86 @@
-# Python GUI Calculator
+# Python GUI Hesap Makinesi
 
-This repository contains a Python-based calculator with a **Graphical User Interface (GUI)** built with Tkinter for ease of use. 
-The application uses an underlying calculator logic engine found in `HesapMakinesi/calculator.py`.
+Bu depo, kullanım kolaylığı için Tkinter ile oluşturulmuş **Grafiksel Kullanıcı Arayüzüne (GUI)** sahip Python tabanlı bir hesap makinesi içerir.
+Uygulama, `HesapMakinesi/calculator.py` içinde bulunan temel bir hesap makinesi mantık motorunu kullanır.
 
 ---
 
-## GUI Calculator
+## GUI Hesap Makinesi
 
-The GUI calculator provides a user-friendly, visual way to perform calculations. It's built using Python's standard Tkinter library.
+GUI hesap makinesi, hesaplamaları gerçekleştirmek için kullanıcı dostu, görsel bir yol sağlar. Python'un standart Tkinter kütüphanesi kullanılarak oluşturulmuştur.
 
-### Running the Calculator
+### Hesap Makinesini Çalıştırma
 
-To run the GUI calculator, navigate to the project's root directory in your terminal and execute:
+GUI hesap makinesini çalıştırmak için terminalinizde projenin kök dizinine gidin ve şunu çalıştırın:
 
 ```bash
 python HesapMakinesi/gui_calculator.py
 ```
 
-### GUI Layout and Usage
+### GUI Düzeni ve Kullanımı
 
-The GUI is organized with a display area at the top, followed by rows of buttons for various operations.
+GUI, üstte bir ekran alanı ve ardından çeşitli işlemler için düğme sıraları ile düzenlenmiştir.
 
--   **Display Area:** A large entry field at the top shows the current expression being built and the results of calculations.
+-   **Ekran Alanı:** Üstteki geniş bir giriş alanı, oluşturulmakta olan mevcut ifadeyi ve hesaplamaların sonuçlarını gösterir.
 
--   **Memory Buttons (Top Row):**
-    -   `MC` (Memory Clear): Resets the value stored in memory to 0.
-    -   `MR` (Memory Recall): Inserts the current memory value into the expression. Can be used as a number in your calculations.
-    -   `MS` (Memory Store): Evaluates the current expression in the display and stores the result into memory.
-    -   `M+` (Memory Add): Evaluates the current expression and adds the result to the value already in memory.
-    -   `M-` (Memory Subtract): Evaluates the current expression and subtracts the result from the value already in memory.
-    *Memory functions are useful for storing intermediate results or frequently used numbers.*
+-   **Hafıza Düğmeleri (Üst Sıra):**
+    -   `MC` (Hafızayı Temizle): Hafızada saklanan değeri 0'a sıfırlar.
+    -   `MR` (Hafızadan Çağır): Mevcut hafıza değerini ifadeye ekler. Hesaplamalarınızda bir sayı olarak kullanılabilir.
+    -   `MS` (Hafızaya Kaydet): Ekrandaki mevcut ifadeyi değerlendirir ve sonucu hafızaya kaydeder.
+    -   `M+` (Hafızaya Ekle): Mevcut ifadeyi değerlendirir ve sonucu hafızadaki mevcut değere ekler.
+    -   `M-` (Hafızadan Çıkar): Mevcut ifadeyi değerlendirir ve sonucu hafızadaki mevcut değerden çıkarır.
+    *Hafıza fonksiyonları, ara sonuçları veya sık kullanılan sayıları saklamak için kullanışlıdır.*
 
--   **Control and Basic Function/Operator Buttons (Second Row from Top):**
-    -   `C` (Clear): Clears the entire current expression and resets the display.
-    -   `CE` (Clear Entry): Clears the last character entered into the expression (simplified version).
-    -   `sqrt`: Square Root function.
-    -   `pow`: Exponentiation operator (use as `number pow exponent`).
+-   **Kontrol ve Temel Fonksiyon/Operatör Düğmeleri (Üstten İkinci Sıra):**
+    -   `C` (Temizle): Mevcut ifadenin tamamını temizler ve ekranı sıfırlar.
+    -   `CE` (Girişi Temizle): İfadeye girilen son karakteri temizler (basitleştirilmiş versiyon).
+    -   `sqrt`: Karekök fonksiyonu.
+    -   `pow`: Üs alma operatörü (`sayı pow üs` olarak kullanın).
 
--   **Number Buttons (0-9, .):** Standard numeric input and decimal point, arranged in a typical keypad layout.
+-   **Sayı Düğmeleri (0-9, .):** Tipik bir tuş takımı düzeninde düzenlenmiş standart sayısal giriş ve ondalık nokta.
 
--   **Operator Buttons:**
-    -   Basic Arithmetic: `+`, `-`, `*`, `/` (generally found alongside number rows).
+-   **Operatör Düğmeleri:**
+    -   Temel Aritmetik: `+`, `-`, `*`, `/` (genellikle sayı sıralarının yanında bulunur).
 
--   **Advanced Function Buttons (Dedicated Rows):**
-    -   `log`: Natural Logarithm (base e).
-    -   `log10`: Base-10 Logarithm.
-    -   `sin`, `cos`, `tan`: Trigonometric functions (input angles in radians).
+-   **Gelişmiş Fonksiyon Düğmeleri (Özel Sıralar):**
+    -   `log`: Doğal Logaritma (e tabanında).
+    -   `log10`: 10 Tabanında Logaritma.
+    -   `sin`, `cos`, `tan`: Trigonometrik fonksiyonlar (giriş açıları radyan cinsinden).
 
--   **Parentheses and Scientific Constants Buttons (Bottom Rows):**
-    -   `(` and `)`: For grouping expressions.
-    -   **Scientific Constants:**
-        -   `π` (Pi): Inserts the value of Pi (approx. 3.14159).
-        -   `e`: Inserts Euler's number (approx. 2.71828).
-        -   `c`: Inserts the speed of light in vacuum (approx. 2.998e8 m/s).
-        -   `h`: Inserts Planck's constant (approx. 6.626e-34 J*s).
-        -   `G`: Inserts the Gravitational constant (approx. 6.674e-11 N*m²/kg²).
-    *Pressing a constant button inserts its symbol (e.g., "pi", "e", "c_light") into the expression, which is then evaluated using its defined value.*
+-   **Parantez ve Bilimsel Sabitler Düğmeleri (Alt Sıralar):**
+    -   `(` ve `)`: İfadeleri gruplamak için.
+    -   **Bilimsel Sabitler:**
+        -   `π` (Pi): Pi değerini ekler (yaklaşık 3.14159).
+        -   `e`: Euler sayısını ekler (yaklaşık 2.71828).
+        -   `c`: Vakumdaki ışık hızını ekler (yaklaşık 2.998e8 m/s).
+        -   `h`: Planck sabitini ekler (yaklaşık 6.626e-34 J*s).
+        -   `G`: Kütleçekim sabitini ekler (yaklaşık 6.674e-11 N*m²/kg²).
+    *Bir sabit düğmesine basmak, sembolünü (örneğin, "pi", "e", "c_isik") ifadeye ekler ve bu daha sonra tanımlanmış değeri kullanılarak değerlendirilir.*
 
--   **Equals Button (`=`):** Evaluates the current expression displayed.
+-   **Eşittir Düğmesi (`=`):** Görüntülenen mevcut ifadeyi değerlendirir.
 
-**How to Use (General):**
-1.  Click the buttons to build your mathematical expression in the display area.
-2.  Functions like `sqrt` or `log` will appear as `sqrt(` or `log(`, prompting you to enter the argument.
-3.  Use parentheses `(` `)` to group parts of your expression as needed.
-4.  Press the `=` button to see the result.
-5.  The result of a calculation can be used as the starting point for the next calculation.
-6.  Press `C` to clear the current expression and start over.
+**Nasıl Kullanılır (Genel):**
+1.  Ekran alanında matematiksel ifadenizi oluşturmak için düğmelere tıklayın.
+2.  `sqrt` veya `log` gibi fonksiyonlar `sqrt(` veya `log(` olarak görünecek ve argümanı girmenizi isteyecektir.
+3.  İfadenizin bölümlerini gerektiği gibi gruplamak için parantezleri `(` `)` kullanın.
+4.  Sonucu görmek için `=` düğmesine basın.
+5.  Bir hesaplamanın sonucu, bir sonraki hesaplama için başlangıç noktası olarak kullanılabilir.
+6.  Mevcut ifadeyi temizlemek ve baştan başlamak için `C` düğmesine basın.
 
-### Error Handling
-If you enter an invalid expression or a calculation results in a mathematical error (e.g., division by zero, square root of a negative number):
--   The display will typically show "Error".
--   A popup dialog box will appear with a more specific error message.
-The expression will usually be cleared or reset after an error, allowing you to start a new calculation.
+### Hata Yönetimi
+Geçersiz bir ifade girerseniz veya bir hesaplama matematiksel bir hatayla sonuçlanırsa (örneğin, sıfıra bölme, negatif bir sayının karekökü):
+-   Ekran tipik olarak "Hata" gösterecektir.
+-   Daha spesifik bir hata mesajı içeren bir açılır iletişim kutusu görünecektir.
+Bir hatadan sonra ifade genellikle temizlenir veya sıfırlanır, bu da yeni bir hesaplama başlatmanıza olanak tanır.
 
 ---
 
-## Unit Tests
+## Birim Testleri
 
-The core calculator logic (used by the GUI) is unit-tested using Python's `unittest` module. The tests are located in `HesapMakinesi/test_calculator.py`. To run the tests, navigate to the `HesapMakinesi` directory and run:
+Temel hesap makinesi mantığı (GUI tarafından kullanılır) Python'un `unittest` modülü kullanılarak birim testine tabi tutulur. Testler `HesapMakinesi/test_calculator.py` konumunda bulunur. `HesapMakinesi` dizinine gidin ve testleri çalıştırmak için şunu çalıştırın:
 ```bash
 python -m unittest test_calculator.py
 ```
 
 ---
-*Historical Note: This project initially started as a very basic C++ calculator. It then evolved into a Python project with a command-line interface (CLI). Recently, the CLI was replaced by the current, more user-friendly GUI calculator, which still utilizes the same underlying Python-based calculation logic.*
+*Tarihsel Not: Bu proje başlangıçta çok temel bir C++ hesap makinesi olarak başladı. Daha sonra komut satırı arayüzüne (CLI) sahip bir Python projesine dönüştü. Yakın zamanda, CLI mevcut, daha kullanıcı dostu GUI hesap makinesi ile değiştirildi, ancak hala aynı temel Python tabanlı hesaplama mantığını kullanıyor.*
