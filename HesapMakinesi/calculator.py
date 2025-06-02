@@ -1,5 +1,10 @@
 # This is the calculator.py file.
-# It will contain the calculator logic.
+# It contains core calculator logic and a command-line interface.
+
+# --- Core Calculator Logic ---
+# The functions in this section are self-contained, perform mathematical
+# operations, and raise exceptions for errors. They do not handle
+# user input directly or print to the console, making them suitable for import.
 
 import math
 
@@ -84,9 +89,13 @@ def tangent(x):
       raise ValueError("Tangent is undefined for angles where cosine is zero (e.g., pi/2 + k*pi)")
   return math.tan(x)
 
-# --- CLI Implementation ---
+# --- Command-Line Interface (CLI) ---
+# The functions and code in this section are responsible for the
+# interactive command-line interface. They handle user input parsing,
+# command dispatching using the core logic functions, and console output.
+
 def parse_input(user_input):
-    """Parses user input into operation and arguments."""
+    """Parses CLI user input string into operation and arguments."""
     parts = user_input.strip().lower().split()
 
     if not parts:
