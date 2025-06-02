@@ -13,8 +13,14 @@ class CalculatorGUI:
         # Configure root window's background color (optional)
         # master.configure(bg="#f0f0f0") # Light gray background
 
+# Define physical constants at the class or module level for clarity
+SPEED_OF_LIGHT = 299792458  # m/s
+PLANCK_CONSTANT = 6.62607015e-34  # J*s
+GRAVITATIONAL_CONSTANT = 6.67430e-11  # N*m^2/kg^2
+
         # Expression string
         self.expression = ""
+        self.memory = 0.0
 
         # Setup for eval context
         self.eval_context = {
@@ -28,7 +34,10 @@ class CalculatorGUI:
             'tan': calc_logic.tangent,
             # Standard math constants/functions
             'pi': math.pi,
-            # 'e': math.e, # Could add if there's an 'e' button
+            'e': math.e,
+            'c_light': SPEED_OF_LIGHT,
+            'h_planck': PLANCK_CONSTANT,
+            'G_grav': GRAVITATIONAL_CONSTANT,
             # Note: 'pow' is handled by replacing "pow" with "**" in the expression string
         }
 
@@ -39,41 +48,60 @@ class CalculatorGUI:
         display_entry = tk.Entry(master, textvariable=self.display_var, font=display_font,
                                  bd=10, relief=tk.SUNKEN, width=14, # Using relief for a bit of depth
                                  state='readonly', justify='right', bg="#ffffff", fg="#000000") # White bg, black text
-        # columnspan adjusted to 4 as we have 4 columns of buttons now
-        display_entry.grid(row=0, column=0, columnspan=4, pady=20, padx=10, sticky="nsew")
+        # columnspan adjusted to 5 as we will have 5 columns for memory buttons
+        display_entry.grid(row=0, column=0, columnspan=5, pady=20, padx=10, sticky="nsew")
 
 
         # --- Button Frame and Definitions ---
-        button_frame = tk.Frame(master) # bg="#f0f0f0" if master bg is set
-        button_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=5, sticky="nsew")
+        button_frame = tk.Frame(master) 
+        button_frame.grid(row=1, column=0, columnspan=5, padx=10, pady=5, sticky="nsew")
 
         # Define button texts, their grid positions (row, col), type, and any specific styling
-        # columnspan and rowspan are mostly 1 now, can be specified if needed
-        # (text, row, col, type, [optional: bg_color_override, font_style_override])
+        # (text, row, col, type, [optional: colspan])
+        # Memory row now has 5 buttons. Other rows will have 4 buttons, centered or spanned.
+        # For simplicity, we'll let the 5th column be empty for rows with 4 buttons.
         buttons = [
-            # Row 1
-            ('C', 0, 0, 'clr'), ('CE', 0, 1, 'clr_entry'), ('sqrt', 0, 2, 'func'), ('pow', 0, 3, 'op'),
-            # Row 2
-            ('7', 1, 0, 'num'), ('8', 1, 1, 'num'), ('9', 1, 2, 'num'), ('/', 1, 3, 'op'),
-            # Row 3
-            ('4', 2, 0, 'num'), ('5', 2, 1, 'num'), ('6', 2, 2, 'num'), ('*', 2, 3, 'op'),
-            # Row 4
-            ('1', 3, 0, 'num'), ('2', 3, 1, 'num'), ('3', 3, 2, 'num'), ('-', 3, 3, 'op'),
-            # Row 5
-            ('0', 4, 0, 'num'), ('.', 4, 1, 'num'), ('=', 4, 2, 'eq'), ('+', 4, 3, 'op'),
-            # Row 6 (Advanced functions)
-            ('log', 5, 0, 'func'), ('log10', 5, 1, 'func'), ('sin', 5, 2, 'func'), ('cos', 5, 3, 'func'),
-            # Row 7
-            ('tan', 6, 0, 'func'), ('(', 6, 1, 'char'), (')', 6, 2, 'char'), ('π', 6, 3, 'const')
+            # Memory Row (row 0) - 5 columns
+            ('MC', 0, 0, 'memory'), ('MR', 0, 1, 'memory'), ('MS', 0, 2, 'memory'), 
+            ('M+', 0, 3, 'memory'), ('M-', 0, 4, 'memory'),
+            # Row 1 (Control and first functions/operators) - 4 main columns, 5th empty
+            ('C', 1, 0, 'clr'), ('CE', 1, 1, 'clr_entry'), ('sqrt', 1, 2, 'func'), ('pow', 1, 3, 'op'),
+            # Empty for (1,4) or a new button could go here if needed
+            # Row 2 (was 1)
+            ('7', 2, 0, 'num'), ('8', 2, 1, 'num'), ('9', 2, 2, 'num'), ('/', 2, 3, 'op'),
+            # Row 3 (was 2)
+            ('4', 3, 0, 'num'), ('5', 3, 1, 'num'), ('6', 3, 2, 'num'), ('*', 3, 3, 'op'),
+            # Row 4 (was 3)
+            ('1', 4, 0, 'num'), ('2', 4, 1, 'num'), ('3', 4, 2, 'num'), ('-', 4, 3, 'op'),
+            # Row 5 (was 4)
+            ('0', 5, 0, 'num'), ('.', 5, 1, 'num'), ('=', 5, 2, 'eq'), ('+', 5, 3, 'op'),
+            # Row 6 (was 5 - Advanced functions)
+            ('log', 6, 0, 'func'), ('log10', 6, 1, 'func'), ('sin', 6, 2, 'func'), ('cos', 6, 3, 'func'),
+            # Row 7 (was 6) - Parentheses and existing constants
+            ('(', 7, 0, 'char'), 
+            (')', 7, 1, 'char'), 
+            ('π', 7, 2, 'const', 'pi'), 
+            ('e', 7, 3, 'const', 'e'),
+            # Row 8 (New row for additional scientific constants)
+            ('c', 8, 0, 'const', 'c_light'),   # Speed of Light
+            ('h', 8, 1, 'const', 'h_planck'),  # Planck's Constant
+            ('G', 8, 2, 'const', 'G_grav'),   # Gravitational Constant
+            # Potentially 2 empty slots here in column 3 and 4 for this new row
         ]
         
-        button_font = ('Arial', 16) # Slightly larger and consistent font
-        button_bold_font = ('Arial', 16, 'bold')
+        button_font = ('Arial', 12) # Further reduced font size for more rows
+        button_bold_font = ('Arial', 12, 'bold') 
 
         # Create and place buttons in the button_frame
         for i, btn_info in enumerate(buttons):
-            text, r, c, btn_type = btn_info[:4]
+            text_on_btn = btn_info[0]
+            r, c, btn_type = btn_info[1], btn_info[2], btn_info[3]
             
+            # Determine value passed to on_button_click: use text_on_btn by default
+            value_for_command = text_on_btn
+            if len(btn_info) > 4: # If a specific value for command is provided (like "pi" for 'π')
+                value_for_command = btn_info[4]
+
             # Default styling
             fg_color = 'black'
             bg_color = '#f7f7f7' # Off-white for numbers
@@ -96,6 +124,10 @@ class CalculatorGUI:
             elif btn_type == 'char' or btn_type == 'const': # Parentheses, Pi
                 bg_color = '#e0e0e0' 
                 font_style = button_bold_font
+            elif btn_type == 'memory':
+                bg_color = '#FF9800' # Orange for memory buttons
+                fg_color = 'white'
+                font_style = button_bold_font
 
 
             # Override styles if provided in btn_info (optional feature, not used in current buttons list)
@@ -106,19 +138,22 @@ class CalculatorGUI:
 
             # Consistent padding and make buttons expand
             # relief=tk.RAISED for a bit of 3D effect on buttons
-            button = tk.Button(button_frame, text=text, font=font_style, fg=fg_color, bg=bg_color,
+            current_colspan = 1
+            # if len(btn_info) > 4 and isinstance(btn_info[4], int) : # Check if colspan is provided
+            #     current_colspan = btn_info[4]
+                
+            button = tk.Button(button_frame, text=text_on_btn, font=font_style, fg=fg_color, bg=bg_color,
                                relief=tk.RAISED, bd=2,
-                               command=lambda t=text, bt=btn_type: self.on_button_click(t, bt))
-            # Using consistent padx/pady for the grid cells within button_frame
-            button.grid(row=r, column=c, sticky="nsew", padx=4, pady=4)
+                               command=lambda v=value_for_command, bt=btn_type: self.on_button_click(v, bt))
+            button.grid(row=r, column=c, columnspan=current_colspan, sticky="nsew", padx=3, pady=3) 
 
 
         # Configure column and row weights for button_frame for uniform button sizing
-        # Now we have 4 columns of buttons
-        for i in range(4): 
+        # Now we have 5 columns for the button_frame due to memory buttons
+        for i in range(5): 
             button_frame.grid_columnconfigure(i, weight=1)
-        # And 7 rows of buttons
-        for i in range(7): 
+        # And 9 rows of buttons now (0-8)
+        for i in range(9): 
             button_frame.grid_rowconfigure(i, weight=1)
             
         # Configure master window's row weights (display row 0, button_frame row 1)
@@ -129,6 +164,30 @@ class CalculatorGUI:
         # Initialize display
         self.display_var.set("0")
         self.just_calculated = False # Flag to clear expression on new number input after '='
+
+    def _evaluate_expression(self, expression_str):
+        """Helper to evaluate an expression string, returns number or raises exception."""
+        if not expression_str:
+            # Attempting to evaluate an empty string often happens with MS/M+/M- if display is "0" or "Error"
+            # We can either return 0.0 or raise a specific error.
+            # Let's try to evaluate what's literally in the display if expression_str is empty
+            # This is relevant if user clears expression then hits MS with "0" in display.
+            current_display = self.display_var.get()
+            if current_display == "Error" : # Add more specific error checks if needed
+                 raise ValueError("Cannot store/use error message in memory.")
+            try:
+                 return float(current_display) # Try to convert display directly if expression is empty
+            except ValueError:
+                 raise ValueError("Invalid value in display for memory operation.")
+
+
+        eval_expression = expression_str.replace("pow", "**")
+        # pi is handled by eval_context
+        
+        # Important: Security with eval. Restrict builtins.
+        # Allowing specific math functions from calc_logic via eval_context.
+        result = eval(eval_expression, {"__builtins__": {}}, self.eval_context)
+        return result
 
     def on_button_click(self, value, btn_type):
         current_display_text = self.display_var.get()
@@ -148,40 +207,26 @@ class CalculatorGUI:
             if not self.expression:
                 self.display_var.set("0")
                 return
-
             try:
-                # Pre-process the expression string for eval()
-                eval_expression = self.expression.replace("pow", "**")
-                # Ensure 'pi' (from button) is treated as math.pi if not already handled by direct eval_context name
-                # This is more robust if 'pi' is part of a larger expression e.g. "pi/2"
-                # However, direct mapping 'pi': math.pi in eval_context is generally better.
-                # Let's assume 'pi' in expression will be correctly handled by context.
-                # If functions like 'sqrt(' are directly in expression, they should map in eval_context.
-                
-                # Important: Security with eval. Restrict builtins.
-                result = eval(eval_expression, {"__builtins__": {}}, self.eval_context)
-
-                # Format result: show as int if it's a whole number float
+                result = self._evaluate_expression(self.expression)
                 if isinstance(result, float) and result.is_integer():
                     result_str = str(int(result))
                 else:
-                    result_str = f"{result:.10g}" # Format to reasonable precision, remove trailing zeros
-
+                    result_str = f"{result:.10g}"
                 self.display_var.set(result_str)
-                self.expression = result_str # Store result for potential further calculation
+                self.expression = result_str
                 self.just_calculated = True
-            
             except ZeroDivisionError:
                 self.display_var.set("Error: Division by zero")
                 messagebox.showerror("Calculation Error", "Cannot divide by zero.")
-                self.expression = "" # Clear expression on error
-                self.just_calculated = True # Allow starting fresh
-            except (SyntaxError, NameError) as e: # NameError if function not in context
+                self.expression = "" 
+                self.just_calculated = True
+            except (SyntaxError, NameError) as e:
                 self.display_var.set("Error: Invalid syntax")
                 messagebox.showerror("Calculation Error", f"Invalid expression syntax or unknown function: {e}")
                 self.expression = ""
                 self.just_calculated = True
-            except (ValueError, TypeError) as e: # Errors from math functions themselves
+            except (ValueError, TypeError) as e: 
                 self.display_var.set("Error: Math domain/type")
                 messagebox.showerror("Calculation Error", f"Mathematical error: {e}")
                 self.expression = ""
@@ -191,7 +236,67 @@ class CalculatorGUI:
                 messagebox.showerror("Calculation Error", f"An unexpected error occurred: {e}")
                 self.expression = ""
                 self.just_calculated = True
-            return # Skip the final print for '=' button
+            return 
+
+        elif btn_type == 'memory':
+            try:
+                if value == 'MC':
+                    self.memory = 0.0
+                    print("Memory Cleared") # For debugging, no direct display change
+                elif value == 'MR':
+                    # Treat MR like number input
+                    mem_str = str(self.memory)
+                    if mem_str.endswith(".0"): mem_str = mem_str[:-2] # Clean display for whole numbers
+                    
+                    if self.just_calculated or (current_display_text == "0" and self.expression == "0"):
+                        self.expression = mem_str
+                    else:
+                         # If last char in expression is a digit or ')', add '*' for implicit multiplication
+                        if self.expression and self.expression[-1].isdigit() or self.expression[-1] == ')':
+                            self.expression += " * " + mem_str
+                        else: # Otherwise, just append (e.g. after an operator or '(')
+                            self.expression += mem_str
+                    self.display_var.set(self.expression)
+                    self.just_calculated = False
+                
+                elif value == 'MS':
+                    # Use current expression on display for MS
+                    # If display is "0" and expression is empty, store 0.
+                    # If display is an error, do not store.
+                    if current_display_text == "Error": # Add more specific error checks if needed
+                        messagebox.showerror("Memory Error", "Cannot store error value.")
+                        return
+                    
+                    # We want to store the evaluated value of the current expression, or current number on display
+                    # If expression is empty, it means user might have typed '0' or it's the initial state.
+                    # Or if an error just occurred and display shows "Error"
+                    val_to_store_str = self.expression if self.expression else current_display_text
+                    if not val_to_store_str and current_display_text == "0": # Store 0 if expression is empty and display is 0
+                        self.memory = 0.0
+                    else:
+                        self.memory = self._evaluate_expression(val_to_store_str)
+                    print(f"Memory Stored: {self.memory}") # Debug
+                    self.just_calculated = True 
+
+                elif value == 'M+':
+                    val_to_add = self._evaluate_expression(self.expression if self.expression else current_display_text)
+                    self.memory += val_to_add
+                    print(f"Memory Add: {self.memory}") # Debug
+                    self.just_calculated = True 
+                
+                elif value == 'M-':
+                    val_to_subtract = self._evaluate_expression(self.expression if self.expression else current_display_text)
+                    self.memory -= val_to_subtract
+                    print(f"Memory Subtract: {self.memory}") # Debug
+                    self.just_calculated = True
+
+            except ValueError as e: 
+                messagebox.showerror("Memory Operation Error", str(e))
+            except Exception as e: # Catch other eval errors for M ops
+                messagebox.showerror("Memory Operation Error", f"Could not perform memory operation: {e}")
+            # No display_var.set here for MC/MS/M+/M- unless we want to show memory content,
+            # which is not standard. MR handles display.
+            return # Skip default print at end of on_button_click for memory ops
 
         elif btn_type == 'num':
             if self.just_calculated or current_display_text == "0" and value != ".":
@@ -255,14 +360,14 @@ class CalculatorGUI:
                 self.expression += value
             self.display_var.set(self.expression if self.expression else "0")
 
-        elif btn_type == 'const': # 'π'
-            # Similar to numbers, can start new expression or append
-            if self.just_calculated or (current_display_text == "0" and self.expression == "0"): # check self.expression too
-                self.expression = "pi" 
-            elif self.expression and not self.expression.endswith(tuple(' +/-*().')): # also check for dot
-                self.expression += " * pi" 
+        elif btn_type == 'const': # 'pi', 'e'
+            # 'value' here will be "pi" or "e"
+            if self.just_calculated or (current_display_text == "0" and self.expression == "0"):
+                self.expression = value 
+            elif self.expression and not self.expression.endswith(tuple(' +/-*().')):
+                self.expression += " * " + value 
             else:
-                self.expression += "pi" # pi is a name in eval_context
+                self.expression += value 
             self.display_var.set(self.expression)
             self.just_calculated = False
         
