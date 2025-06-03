@@ -55,7 +55,7 @@ GUI, üstte bir ekran alanı ve ardından çeşitli işlemler için düğme sır
         -   `c`: Vakumdaki ışık hızını ekler (yaklaşık 2.998e8 m/s).
         -   `h`: Planck sabitini ekler (yaklaşık 6.626e-34 J*s).
         -   `G`: Kütleçekim sabitini ekler (yaklaşık 6.674e-11 N*m²/kg²).
-    *Bir sabit düğmesine basmak, sembolünü (örneğin, "pi", "e", "c_isik") ifadeye ekler ve bu daha sonra tanımlanmış değeri kullanılarak değerlendirilir.*
+    *Bir sabit düğmesine basmak, sembolünü (örneğin, "pi", "e", "c_light") ifadeye ekler ve bu daha sonra tanımlanmış değeri kullanılarak değerlendirilir.*
 
 -   **Eşittir Düğmesi (`=`):** Görüntülenen mevcut ifadeyi değerlendirir.
 
