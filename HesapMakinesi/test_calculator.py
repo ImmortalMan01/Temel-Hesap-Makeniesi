@@ -110,10 +110,11 @@ class TestCalculator(unittest.TestCase):
         with self.assertRaises(ValueError): # tan(3pi/2)
             tangent(3 * math.pi / 2)
         # Test a value very close to pi/2
+        # Use a very small delta to ensure math.isclose detects cosine as zero
         with self.assertRaises(ValueError):
-            tangent(math.pi/2 - 1e-9) # Should be a large number, but our check is for cos(x) being close to 0
+            tangent(math.pi/2 - 1e-10)
         with self.assertRaises(ValueError):
-            tangent(math.pi/2 + 1e-9)
+            tangent(math.pi/2 + 1e-10)
 
 
     # --- Test Input Type Validation ---
