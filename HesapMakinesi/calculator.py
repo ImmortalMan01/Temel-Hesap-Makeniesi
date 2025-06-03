@@ -1,5 +1,5 @@
 # This is the calculator.py file.
-# It contains core calculator logic and a command-line interface.
+# It contains the core calculator logic.
 
 # --- Core Calculator Logic ---
 # The functions in this section are self-contained, perform mathematical
