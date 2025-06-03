@@ -102,7 +102,7 @@ class TestCalculator(unittest.TestCase):
     def test_tangent(self):
         self.assertAlmostEqual(tangent(0), 0)
         self.assertAlmostEqual(tangent(math.pi / 4), 1)
-        # self.assertAlmostEqual(tangent(3 * math.pi / 4), -1) # tan(pi - pi/4) = -tan(pi/4) = -1
+        self.assertAlmostEqual(tangent(3 * math.pi / 4), -1, places=7)  # tan(pi - pi/4) = -tan(pi/4) = -1
 
     def test_tangent_undefined(self):
         with self.assertRaises(ValueError): # tan(pi/2)
