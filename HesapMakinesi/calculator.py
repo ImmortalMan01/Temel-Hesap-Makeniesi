@@ -84,9 +84,13 @@ def tangent(x):
   """Calculates the tangent of x (x in radians)."""
   if not _is_numeric(x):
     raise TypeError("Input must be numeric")
-  # tan(pi/2 + k*pi) is undefined
-  if math.isclose(math.cos(x), 0):
-      raise ValueError("Tangent is undefined for angles where cosine is zero (e.g., pi/2 + k*pi)")
+  # tan(pi/2 + k*pi) is undefined; use a small absolute tolerance
+  # when checking if cosine is effectively zero to account for
+  # floating point inaccuracies.
+  if math.isclose(math.cos(x), 0, abs_tol=1e-9):
+      raise ValueError(
+          "Tangent is undefined for angles where cosine is zero (e.g., pi/2 + k*pi)"
+      )
   return math.tan(x)
 
 # End of Core Calculator Logic.
