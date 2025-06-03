@@ -244,7 +244,7 @@ class CalculatorGUI:
                         self.expression = mem_str
                     else:
                          # If last char in expression is a digit or ')', add '*' for implicit multiplication
-                        if self.expression and self.expression[-1].isdigit() or self.expression[-1] == ')':
+                        if self.expression and (self.expression[-1].isdigit() or self.expression[-1] == ')'):
                             self.expression += " * " + mem_str
                         else: # Otherwise, just append (e.g. after an operator or '(')
                             self.expression += mem_str
